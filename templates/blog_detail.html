@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Detail - iBlog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .blog-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .blog-category {
+            display: inline-block;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .blog-title {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 400px;
+            border-radius: 20px;
+            background-size: cover;
+            background-position: center;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .blog-content-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .blog-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-wrap;
+        }
+
+        .blog-actions {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            padding: 0.8rem;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .social-btn.facebook { background: #4267B2; }
+        .social-btn.twitter { background: #1DA1F2; }
+        .social-btn.linkedin { background: #2867B2; }
+        .social-btn.whatsapp { background: #25D366; }
+        .social-btn.email { background: #EA4335; }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .error-message i {
+            font-size: 4rem;
+            color: #e1e5e9;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .blog-title {
+                font-size: 2rem;
+            }
+
+            .blog-meta {
+                gap: 1rem;
+            }
+
+            .blog-content-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .action-buttons,
+            .share-buttons {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">iBlog</a>
+            <div class="nav-actions">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/blogs" class="btn btn-outline">
+                    <i class="fas fa-blog"></i> All Blogs
+                </a>
+                <a href="/create-blog" class="btn">
+                    <i class="fas fa-plus"></i> Write Blog
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading blog post...</p>
+        </div>
+
+        <div class="error-message" id="error-message" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Blog not found</h3>
+            <p>The blog post you're looking for doesn't exist or has been removed.</p>
+            <a href="/blogs" class="btn" style="margin-top: 1rem;">
+                <i class="fas fa-blog"></i> Browse All Blogs
+            </a>
+        </div>
+
+        <div id="blog-detail" style="display: none;">
+            <div class="blog-header">
+                <div class="blog-category" id="blog-category"></div>
+                <h1 class="blog-title" id="blog-title"></h1>
+                <div class="blog-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span id="blog-author"></span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span id="blog-date"></span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-eye"></i>
+                        <span id="blog-views"></span> views
+                    </div>
+                </div>
+            </div>
+
+            <div class="blog-image" id="blog-image"></div>
+
+            <div class="blog-content-container">
+                <div class="blog-content" id="blog-content"></div>
+            </div>
+
+            <div class="blog-actions">
+                <h3 style="margin-bottom: 1rem; color: #333;">Enjoyed this post?</h3>
+                <div class="action-buttons">
+                    <button class="btn" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    <button class="btn btn-outline" id="translate-btn">
+                        <i class="fas fa-language"></i> Translate
+                    </button>
+                    <button class="btn btn-outline" id="summarize-btn">
+                        <i class="fas fa-compress-alt"></i> Summarize
+                    </button>
+                </div>
+
+                <h4 style="margin-bottom: 1rem; color: #666;">Share this blog</h4>
+                <div class="share-buttons">
+                    <a href="#" class="social-btn facebook" id="share-facebook" title="Share on Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-btn twitter" id="share-twitter" title="Share on Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-btn linkedin" id="share-linkedin" title="Share on LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#" class="social-btn whatsapp" id="share-whatsapp" title="Share on WhatsApp">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="social-btn email" id="share-email" title="Share via Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentBlog = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogId = getBlogIdFromUrl();
+            if (blogId) {
+                loadBlog(blogId);
+            } else {
+                showError();
+            }
+        });
+
+        function getBlogIdFromUrl() {
+            const path = window.location.pathname;
+            const match = path.match(/\/blog\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        async function loadBlog(blogId) {
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('error-message');
+            const blogDetail = document.getElementById('blog-detail');
+
+            try {
+                const response = await fetch(`/api/get_blog/${blogId}`);
+                const blog = await response.json();
+
+                if (response.ok) {
+                    currentBlog = blog;
+                    displayBlog(blog);
+                    setupShareButtons(blog);
+
+                    loading.style.display = 'none';
+                    blogDetail.style.display = 'block';
+                } else {
+                    throw new Error('Blog not found');
+                }
+
+            } catch (error) {
+                console.error('Error loading blog:', error);
+                showError();
+            }
+        }
+
+        function displayBlog(blog) {
+            document.getElementById('blog-category').textContent = blog.category;
+            document.getElementById('blog-title').textContent = blog.title;
+            document.getElementById('blog-author').textContent = blog.author;
+            document.getElementById('blog-date').textContent = formatDate(blog.date);
+            document.getElementById('blog-views').textContent = blog.views || 0;
+            document.getElementById('blog-content').textContent = blog.content;
+            document.getElementById('blog-image').style.backgroundImage = `url('${blog.image}')`;
+
+            // Update page title
+            document.title = `${blog.title} - iBlog`;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function showError() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-message').style.display = 'block';
+        }
+
+        function setupShareButtons(blog) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(blog.title);
+            const text = encodeURIComponent(`Check out this amazing blog post: ${blog.title}`);
+
+            document.getElementById('share-facebook').href = 
+                `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+
+            document.getElementById('share-twitter').href = 
+                `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
+
+            document.getElementById('share-linkedin').href = 
+                `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+
+            document.getElementById('share-whatsapp').href = 
+                `https://wa.me/?text=${text}%20${url}`;
+
+            document.getElementById('share-email').href = 
+                `mailto:?subject=${title}&body=${text}%20${url}`;
+        }
+
+        // Translate functionality
+        document.getElementById('translate-btn').addEventListener('click', async function() {
+            if (!currentBlog) return;
+
+            const language = prompt('Enter language code (es, fr, de, it, pt, ru, ja, ko, zh, hi):');
+            if (!language) return;
+
+            try {
+                const response = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: currentBlog.content,
+                        language: language
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    // Create a new window with translated content
+                    const translatedWindow = window.open('', '_blank');
+                    translatedWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>${currentBlog.title} (Translated)</title>
+                            <style>
+                                body { font-family: 'Poppins', sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+                                h1 { color: #333; }
+                                .notice { background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="notice">
+                                <strong>Translation Notice:</strong> This is an automated translation. The original post was in English.
+                            </div>
+                            <h1>${currentBlog.title}</h1>
+                            <p><strong>Author:</strong> ${currentBlog.author} | <strong>Date:</strong> ${formatDate(currentBlog.date)}</p>
+                            <div style="white-space: pre-wrap;">${result.translated_text}</div>
+                        </body>
+                        </html>
+                    `);
+                }
+            } catch (error) {
+                alert('Translation failed. Please try again.');
+            }
+        });
+
+        // Summarize functionality
+        document.getElementById('summarize-btn').addEventListener('click', async function() {
+            if (!currentBlog) return;
+
+            try {
+                const response = await fetch('/api/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: currentBlog.content })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert(`Blog Summary:\n\n${result.summary}`);
+                }
+            } catch (error) {
+                alert('Summarization failed. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

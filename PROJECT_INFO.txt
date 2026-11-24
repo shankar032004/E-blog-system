@@ -1,0 +1,29 @@
+# iBlog Professional Blogging Platform
+Created: 2025-10-05 12:07:20
+
+## Project Structure:
+- server.py - Main Flask application
+- requirements.txt - Python dependencies
+- README.md - Setup and usage guide
+- templates/ - HTML template files
+- static/ - Static assets (CSS, JS, images)
+
+## Quick Start:
+1. pip install -r requirements.txt
+2. python server.py
+3. Open http://127.0.0.1:5000/
+
+## Features:
+✅ User Authentication (Login/Signup)
+✅ Blog Creation with AI Tools
+✅ Voice-to-Text Recognition
+✅ Auto-Correction & Grammar Check
+✅ Multi-Language Translation
+✅ Content Summarization
+✅ Blog Search & Filtering
+✅ Professional Responsive Design
+✅ Pre-loaded Sample Blogs
+✅ SQLite Database Integration
+✅ Modern UI/UX Design
+
+Built with Flask, SQLAlchemy, NLTK, and modern web technologies.

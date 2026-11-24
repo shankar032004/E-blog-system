@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - iBlog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .search-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .search-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .search-info {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .results-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: none;
+        }
+
+        .results-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e1e5e9;
+            background: #f8f9fa;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .results-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            padding: 2rem;
+            border-bottom: 1px solid #e1e5e9;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .result-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .result-category {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .no-results {
+            padding: 3rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .no-results i {
+            font-size: 4rem;
+            color: #e1e5e9;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .search-tips {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .search-tips h3 {
+            margin-bottom: 1rem;
+        }
+
+        .tips-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tips-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-list i {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .result-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">iBlog</a>
+            <div class="nav-actions">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/blogs" class="btn btn-outline">
+                    <i class="fas fa-blog"></i> All Blogs
+                </a>
+                <a href="/create-blog" class="btn">
+                    <i class="fas fa-plus"></i> Write Blog
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="search-header">
+            <h1>Search Blogs</h1>
+            <p>Find the perfect blog post from our extensive collection</p>
+        </div>
+
+        <div class="search-tips">
+            <h3><i class="fas fa-lightbulb"></i> Search Tips</h3>
+            <ul class="tips-list">
+                <li><i class="fas fa-check"></i> Search by title, content, author, or category</li>
+                <li><i class="fas fa-check"></i> Use specific keywords for better results</li>
+                <li><i class="fas fa-check"></i> Try different variations of your search terms</li>
+            </ul>
+        </div>
+
+        <div class="search-container">
+            <form class="search-form" id="search-form">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="search-input" 
+                    placeholder="Enter keywords to search blogs..." 
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+            <div class="search-info">
+                Search across titles, content, authors, and categories
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Searching blogs...</p>
+        </div>
+
+        <div class="results-container" id="results-container">
+            <div class="results-header">
+                <div class="results-count" id="results-count"></div>
+            </div>
+            <div class="results-list" id="results-list">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+
+        <div class="no-results" id="no-results" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3>No results found</h3>
+            <p>Try different keywords or browse all blogs to discover great content.</p>
+            <a href="/blogs" class="btn" style="margin-top: 1rem;">
+                <i class="fas fa-blog"></i> Browse All Blogs
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const query = document.getElementById('search-input').value.trim();
+            if (!query) return;
+
+            await performSearch(query);
+        });
+
+        async function performSearch(query) {
+            const loading = document.getElementById('loading');
+            const resultsContainer = document.getElementById('results-container');
+            const noResults = document.getElementById('no-results');
+
+            // Show loading
+            loading.style.display = 'block';
+            resultsContainer.style.display = 'none';
+            noResults.style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/search_blogs?q=${encodeURIComponent(query)}`);
+                const results = await response.json();
+
+                loading.style.display = 'none';
+
+                if (results.length > 0) {
+                    displayResults(results, query);
+                    resultsContainer.style.display = 'block';
+                } else {
+                    noResults.style.display = 'block';
+                }
+
+            } catch (error) {
+                console.error('Search error:', error);
+                loading.style.display = 'none';
+                noResults.style.display = 'block';
+            }
+        }
+
+        function displayResults(results, query) {
+            const resultsCount = document.getElementById('results-count');
+            const resultsList = document.getElementById('results-list');
+
+            resultsCount.textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''} for "${query}"`;
+
+            resultsList.innerHTML = '';
+
+            results.forEach(blog => {
+                const resultItem = createResultItem(blog, query);
+                resultsList.appendChild(resultItem);
+            });
+        }
+
+        function createResultItem(blog, query) {
+            const item = document.createElement('div');
+            item.className = 'result-item';
+            item.onclick = () => window.location.href = `/blog/${blog.id}`;
+
+            // Highlight search terms in title and content
+            const highlightedTitle = highlightText(blog.title, query);
+            const highlightedContent = highlightText(blog.content, query);
+
+            item.innerHTML = `
+                <div class="result-title">${highlightedTitle}</div>
+                <div class="result-meta">
+                    <span><i class="fas fa-user"></i> ${blog.author}</span>
+                    <span><i class="fas fa-calendar"></i> ${formatDate(blog.date)}</span>
+                    <span><i class="fas fa-eye"></i> ${blog.views || 0} views</span>
+                </div>
+                <div class="result-excerpt">${highlightedContent}</div>
+                <div class="result-category">${blog.category}</div>
+            `;
+
+            return item;
+        }
+
+        function highlightText(text, query) {
+            if (!query) return text;
+
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return text.replace(regex, '<mark style="background: #fff3cd; padding: 0.1rem 0.2rem;">$1</mark>');
+        }
+
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Auto-focus search input on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('search-input').focus();
+        });
+
+        // Handle URL parameters for direct search
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('q');
+        if (searchQuery) {
+            document.getElementById('search-input').value = searchQuery;
+            performSearch(searchQuery);
+        }
+    </script>
+</body>
+</html>

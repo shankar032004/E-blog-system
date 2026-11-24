@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Blogs - iBlog</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 25px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.2);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .blog-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+        }
+
+        .blog-category {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .blog-views {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .blog-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .read-more {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .read-more:hover {
+            transform: translateX(5px);
+        }
+
+        .blog-date {
+            color: #999;
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-blogs {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .no-blogs i {
+            font-size: 4rem;
+            color: #e1e5e9;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                justify-content: flex-start;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+            }
+
+            .filter-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">iBlog</a>
+            <div class="nav-actions">
+                <a href="/" class="btn btn-outline">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="/create-blog" class="btn">
+                    <i class="fas fa-plus"></i> Write Blog
+                </a>
+                <a href="/search" class="btn btn-outline">
+                    <i class="fas fa-search"></i> Search
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Discover Amazing Stories</h1>
+            <p>Explore our collection of insightful blogs from talented writers around the world</p>
+        </div>
+
+        <div class="filters" id="category-filters">
+            <button class="filter-btn active" data-category="all">All Posts</button>
+            <button class="filter-btn" data-category="Technology">Technology</button>
+            <button class="filter-btn" data-category="Health">Health</button>
+            <button class="filter-btn" data-category="Lifestyle">Lifestyle</button>
+            <button class="filter-btn" data-category="Travel">Travel</button>
+            <button class="filter-btn" data-category="Food">Food</button>
+            <button class="filter-btn" data-category="Business">Business</button>
+            <button class="filter-btn" data-category="Education">Education</button>
+            <button class="filter-btn" data-category="Writing">Writing</button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading amazing blogs...</p>
+        </div>
+
+        <div class="no-blogs" id="no-blogs" style="display: none;">
+            <i class="fas fa-blog"></i>
+            <h3>No blogs found</h3>
+            <p>Be the first to create a blog post!</p>
+            <a href="/create-blog" class="btn" style="margin-top: 1rem;">
+                <i class="fas fa-plus"></i> Create First Blog
+            </a>
+        </div>
+
+        <div class="blog-grid" id="blog-grid">
+            <!-- Blogs will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        let allBlogs = [];
+        let filteredBlogs = [];
+        let currentFilter = 'all';
+
+        // Load blogs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBlogs();
+        });
+
+        async function loadBlogs() {
+            const loading = document.getElementById('loading');
+            const blogGrid = document.getElementById('blog-grid');
+            const noBlogs = document.getElementById('no-blogs');
+
+            try {
+                const response = await fetch('/api/get_blogs');
+                const blogs = await response.json();
+
+                allBlogs = blogs;
+                filteredBlogs = blogs;
+
+                loading.style.display = 'none';
+
+                if (blogs.length === 0) {
+                    noBlogs.style.display = 'block';
+                } else {
+                    displayBlogs(blogs);
+                }
+
+            } catch (error) {
+                console.error('Error loading blogs:', error);
+                loading.innerHTML = '<p>Failed to load blogs. Please try again later.</p>';
+            }
+        }
+
+        function displayBlogs(blogs) {
+            const blogGrid = document.getElementById('blog-grid');
+            blogGrid.innerHTML = '';
+
+            blogs.forEach(blog => {
+                const blogCard = createBlogCard(blog);
+                blogGrid.appendChild(blogCard);
+            });
+        }
+
+        function createBlogCard(blog) {
+            const card = document.createElement('div');
+            card.className = 'blog-card';
+            card.onclick = () => window.location.href = `/blog/${blog.id}`;
+
+            card.innerHTML = `
+                <div class="blog-image" style="background-image: url('${blog.image}')">
+                    <div class="blog-category">${blog.category}</div>
+                </div>
+                <div class="blog-content">
+                    <h3 class="blog-title">${blog.title}</h3>
+                    <div class="blog-meta">
+                        <div class="blog-author">
+                            <i class="fas fa-user"></i>
+                            ${blog.author}
+                        </div>
+                        <div class="blog-views">
+                            <i class="fas fa-eye"></i>
+                            ${blog.views || 0}
+                        </div>
+                    </div>
+                    <p class="blog-excerpt">${blog.content}</p>
+                    <div class="blog-actions">
+                        <a href="/blog/${blog.id}" class="read-more" onclick="event.stopPropagation()">
+                            Read More <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <span class="blog-date">${formatDate(blog.date)}</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Category filtering
+        document.getElementById('category-filters').addEventListener('click', function(e) {
+            if (e.target.classList.contains('filter-btn')) {
+                // Update active filter button
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+
+                const category = e.target.getAttribute('data-category');
+                currentFilter = category;
+
+                if (category === 'all') {
+                    filteredBlogs = allBlogs;
+                } else {
+                    filteredBlogs = allBlogs.filter(blog => blog.category === category);
+                }
+
+                displayBlogs(filteredBlogs);
+
+                // Show/hide no blogs message
+                const noBlogs = document.getElementById('no-blogs');
+                if (filteredBlogs.length === 0 && allBlogs.length > 0) {
+                    noBlogs.innerHTML = `
+                        <i class="fas fa-filter"></i>
+                        <h3>No blogs found in "${category}" category</h3>
+                        <p>Try selecting a different category or create a new blog post.</p>
+                    `;
+                    noBlogs.style.display = 'block';
+                    document.getElementById('blog-grid').style.display = 'none';
+                } else {
+                    noBlogs.style.display = 'none';
+                    document.getElementById('blog-grid').style.display = 'grid';
+                }
+            }
+        });
+
+        // Auto-refresh blogs every 30 seconds
+        setInterval(async function() {
+            try {
+                const response = await fetch('/api/get_blogs');
+                const blogs = await response.json();
+
+                if (JSON.stringify(blogs) !== JSON.stringify(allBlogs)) {
+                    allBlogs = blogs;
+
+                    // Re-apply current filter
+                    if (currentFilter === 'all') {
+                        filteredBlogs = allBlogs;
+                    } else {
+                        filteredBlogs = allBlogs.filter(blog => blog.category === currentFilter);
+                    }
+
+                    displayBlogs(filteredBlogs);
+                }
+            } catch (error) {
+                console.log('Auto-refresh failed:', error);
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
